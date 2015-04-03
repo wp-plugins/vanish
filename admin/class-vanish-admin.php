@@ -54,6 +54,12 @@ class Vanish_Admin {
   }
 
 
+  /**
+   * Register Theme Customize settings
+   *
+   * @since     1.0.0
+   * @param     WP_Customize_Manager      $wp_customize     Passed by hook to lend access to customize manager
+   */
   public function vanish_customize_register( $wp_customize ) {
 
     $wp_customize->add_section( 'vanish' , array(
@@ -73,6 +79,17 @@ class Vanish_Admin {
 
   }
 
+  /**
+   * Sanitize selectors
+   *
+   * @since     1.0.0
+   * @param     string      $selectors     User input from the vanish_selectors control
+   *
+   * We are using the built-in sanitize_html_class function to verify
+   * CSS selectors. The function only accepts single selectors, so first
+   * we need to separate multiple selectors, and then separate those
+   * further into selector parts.
+   */
   public function vanish_sanitize_selectors( $selectors ) {
 
     // Explode multiple selectors
@@ -101,8 +118,25 @@ class Vanish_Admin {
     return $selectors;
   }
 
+  /**
+   * Login head callback
+   *
+   * @since     1.0.1
+   */
   public function vanish_login_head() {
     echo '<style type="text/css"> /* Inserted by Vanish plugin https://wordpress.org/plugins/vanish/ */ '.get_theme_mod('vanish_selectors').' {display:none!important;visibility:hidden!important;}</style>';
+  }
+
+  /**
+   * Add action links callback
+   *
+   * @since     1.0.2
+   * @param     array      $links     Default action links
+   */
+  public function vanish_add_action_links( $links ) {
+    return array_merge( $links, array(
+      'settings' => '<a href="'. get_admin_url(null, 'customize.php') .'">Settings</a>'
+    ));
   }
 
 }
